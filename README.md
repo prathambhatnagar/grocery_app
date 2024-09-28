@@ -1,4 +1,4 @@
 # grocery_app
 flutter grocery app
 <br>
-Author Pratham bhatnagar
+Author Pratham Bhatnagar
