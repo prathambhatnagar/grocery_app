@@ -11,25 +11,33 @@ class ForgotPassword extends StatefulWidget {
 
 class _ForgotPasswordState extends State<ForgotPassword> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController emailController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
 
-  resetPassword() async {
+  Future<void> resetPassword() async {
     try {
       await FirebaseAuth.instance
           .sendPasswordResetEmail(email: emailController.text.trim());
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
           content: Text(
-        "Password reset link has been sent",
-        style: TextStyle(fontSize: 18),
-      )));
+            "Password reset link has been sent.",
+            style: TextStyle(fontSize: 18),
+          ),
+        ),
+      );
     } on FirebaseAuthException catch (e) {
+      String message = "An error occurred. Please try again.";
       if (e.code == "user-not-found") {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(
-          "No user found for this email",
-          style: TextStyle(fontSize: 18),
-        )));
+        message = "No user found for this email.";
       }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            message,
+            style: TextStyle(fontSize: 18),
+          ),
+        ),
+      );
     }
   }
 
@@ -37,56 +45,64 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Container(
-        child: Column(
-          children: [
-            SizedBox(height: 100),
-            Container(
-              alignment: Alignment.topCenter,
-              child: Text(
-                "Password Reset", // Fixed the typo here
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              SizedBox(height: 50),
+              Text(
+                "Password Reset",
                 style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 35),
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 35,
+                ),
               ),
-            ),
-            SizedBox(height: 10),
-            Expanded(
-              child: Form(
-                key: _formKey,
-                child: Padding(
-                  padding: EdgeInsets.only(left: 10),
+              SizedBox(height: 20),
+              Expanded(
+                child: Form(
+                  key: _formKey,
                   child: ListView(
                     children: [
                       Container(
                         decoration: BoxDecoration(
-                            border: Border.all(color: Colors.white, width: 2),
-                            borderRadius: BorderRadius.circular(50)),
+                          border: Border.all(color: Colors.white, width: 2),
+                          borderRadius: BorderRadius.circular(50),
+                        ),
                         child: TextFormField(
                           controller: emailController,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return "Please enter email";
+                              return "Please enter your email.";
+                            }
+                            if (!RegExp(
+                                    r"^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                .hasMatch(value)) {
+                              return "Please enter a valid email address.";
                             }
                             return null;
                           },
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
+                          style: TextStyle(color: Colors.white),
                           decoration: InputDecoration(
-                              hintText: "Enter your Email",
-                              hintStyle:
-                                  TextStyle(fontSize: 20, color: Colors.white),
-                              prefixIcon: Icon(
-                                Icons.email,
-                                size: 20,
-                                color: Colors.white,
-                              ),
-                              border: InputBorder.none),
+                            hintText: "Enter your Email",
+                            hintStyle: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white70,
+                            ),
+                            prefixIcon: Icon(
+                              Icons.email,
+                              color: Colors.white,
+                            ),
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 16,
+                            ),
+                          ),
                         ),
                       ),
-                      SizedBox(height: 80),
+                      SizedBox(height: 50),
                       GestureDetector(
                         onTap: () {
                           if (_formKey.currentState!.validate()) {
@@ -94,58 +110,64 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           }
                         },
                         child: Container(
-                          width: 200,
-                          height: 100,
-                          padding: EdgeInsets.all(10),
+                          width: double.infinity,
+                          height: 50,
                           decoration: BoxDecoration(
-                              color: Colors.black,
-                              borderRadius: BorderRadius.circular(10)),
+                            color: Colors.yellow,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                           child: Center(
                             child: Text(
                               "Send Email",
                               style: TextStyle(
-                                  color: Colors.black,
-                                  backgroundColor: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold),
+                                color: Colors.black,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 80, horizontal: 90),
+                      SizedBox(height: 30),
+                      Center(
                         child: GestureDetector(
                           onTap: () {
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Signup()));
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Signup(),
+                              ),
+                            );
                           },
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
                                 "Don't have an account?",
                                 style: TextStyle(
-                                    fontSize: 18, color: Colors.white),
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
                               ),
                               SizedBox(width: 5),
                               Text(
                                 "Create",
                                 style: TextStyle(
-                                    fontSize: 18, color: Colors.yellow),
-                              )
+                                  fontSize: 16,
+                                  color: Colors.yellow,
+                                ),
+                              ),
                             ],
                           ),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
               ),
-            ),
-            SizedBox(height: 50),
-          ],
+              SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
     );
