@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "698398233958",
+    "project_id": "gorcery-b8793",
+    "storage_bucket": "gorcery-b8793.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:698398233958:android:203aca3b4c714f4586e4a7",
+        "android_client_info": {
+          "package_name": "com.example.grocery"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQ6svvJdxqCGmME-DMvl3WmYtxg7DRKJg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
